@@ -44,7 +44,11 @@ function handleSubmit(event) {
         
          })
     .catch(error => {
-             console.log(error);
+        iziToast.error({
+                title: 'Error',
+                message: error.message,
+                position: 'topRight'
+            })
              
     })
     .finally(() => {
