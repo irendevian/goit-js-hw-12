@@ -60,39 +60,3 @@ export function hideLoadMoreButton() {
 }
 
 
-
-// ----------------------------------------------------
-
-let page = 1;
-
-export async function showLoadMoreButton() {
-    page++;
-    console.log(page);
-    loadMore.disabled = true;
-
-    try {
-        const data = await getImagesByQuery();
-        gallery.insertAdjacentHTML("beforeend", createGallery(data.hits));
-        console.log(data);
-
-        if (data.page >= data.totalHits) {
-            
-            iziToast.info ({
-                title: 'Info',
-                message: "We're sorry, but you've reached the end of search results.",
-                position: 'topRight'
-            })
-        }
-
-    } catch (error) {
-        iziToast.error({
-                title: 'Error',
-                message: error.message,
-                position: 'topRight'
-            })
-    } finally {
-        loadMore.disabled = false;
-    }
-    
-}
-
