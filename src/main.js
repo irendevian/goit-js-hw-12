@@ -104,6 +104,16 @@ function handleLoadMore() {
                     position: 'topRight'
                 });
             }
+
+            const galleryCard = document.querySelector(".gallery-card");
+            const galleryCardHeight = galleryCard.getBoundingClientRect().height;
+
+            window.scrollBy({
+                top: galleryCardHeight * 2,
+                left: 0,
+                behavior: 'smooth'
+            });     
+
         })
         .catch(error => {
             iziToast.error({

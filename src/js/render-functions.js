@@ -11,7 +11,7 @@ const loadMore = document.querySelector(".btn-load-more");
 export function createGallery(images) {
 
     const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
-        <li>
+        <li class="gallery-card">
             <a href="${largeImageURL}">
             <img src="${webformatURL}" alt="${tags}" width="360"/></a>
             <div class="descr">
