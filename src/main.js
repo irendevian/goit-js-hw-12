@@ -24,7 +24,8 @@ let totalHits = 0;
 form.addEventListener("submit", handleSubmit);
 loadMore.addEventListener("click", handleLoadMore);
 
-function handleSubmit(event) {
+
+async function handleSubmit(event) {
     event.preventDefault();
 
     const userValueInput = input.value.toLowerCase().trim();
@@ -38,16 +39,16 @@ function handleSubmit(event) {
         return;
     }
 
+    currentPage = 1;
     showLoader();
     clearGallery();
     hideLoadMoreButton();
     currentQuery = userValueInput;
 
-
-    getImagesByQuery(currentQuery, currentPage)
-        .then(data => {
+    try {
+        const data = await getImagesByQuery(currentQuery, currentPage);
             const images = data.hits;
-            const totalHits = data.totalHits;
+            totalHits = data.totalHits;
 
             if (images.length === 0) {
                 iziToast.error({
@@ -57,10 +58,10 @@ function handleSubmit(event) {
                 });
                 return;
             }
-
+    
             createGallery(images);
 
-            if (images * 15 >= totalHits) {
+            if (currentPage * 15 >= totalHits) {
                 hideLoadMoreButton();
                 iziToast.info({
                     title: 'Info',
@@ -70,61 +71,57 @@ function handleSubmit(event) {
             } else {
                 showLoadMoreButton();
             }
-        })
-        
-        .catch(error => {
+
+    } catch (error) {
             iziToast.error({
                 title: 'Error',
                 message: error.message,
                 position: 'topRight'
             });
              
-        })
-        .finally(() => {
+        } finally {
             hideLoader();
-        });
-
+        };
+    
 }
 
-function handleLoadMore() {
+async function handleLoadMore() {
     currentPage++;
     showLoaderBottom();
 
     loadMore.disabled = true;
 
-    getImagesByQuery(currentQuery, currentPage)
-        .then(data => {
-            createGallery(data.hits);
+    try {
+        const data = await getImagesByQuery(currentQuery, currentPage);
+        createGallery(data.hits);
 
-            if (data.hits * 15 >= totalHits) {
-                hideLoadMoreButton();
-                iziToast.info({
-                    title: 'Info',
-                    message: "We're sorry, but you've reached the end of search results.",
-                    position: 'topRight'
-                });
-            }
+        if (currentPage * 15 >= totalHits) {
+            hideLoadMoreButton();
+            iziToast.info({
+                title: 'Info',
+                message: "We're sorry, but you've reached the end of search results.",
+                position: 'topRight'
+            });
+        }
 
-            const galleryCard = document.querySelector(".gallery-card");
+        const galleryCard = document.querySelector(".gallery-card");
+        if (galleryCard) {
             const galleryCardHeight = galleryCard.getBoundingClientRect().height;
-
             window.scrollBy({
                 top: galleryCardHeight * 2,
                 left: 0,
                 behavior: 'smooth'
-            });     
-
-        })
-        .catch(error => {
-            iziToast.error({
-                title: 'Error',
-                message: error.message,
-                position: 'topRight'
             });
-        })
-        .finally(() => {
-            hideLoaderBottom();
-            loadMore.disabled = false;
-        });
-} 
+        }
 
+    } catch (error) {
+        iziToast.error({
+            title: 'Error',
+            message: error.message,
+            position: 'topRight'
+        });
+    } finally {
+        hideLoaderBottom();
+        loadMore.disabled = false;
+    }
+}

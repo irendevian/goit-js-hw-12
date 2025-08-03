@@ -8,6 +8,12 @@ const loaderBottom = document.querySelector(".loader-bottom");
 const loadMore = document.querySelector(".btn-load-more");
 
 
+const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionsDelay: 250,
+});
+ 
+
 export function createGallery(images) {
 
     const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
@@ -27,12 +33,6 @@ export function createGallery(images) {
     lightbox.refresh();
 
 }
-
-
- const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionsDelay: 250,
- });
 
 
 export function clearGallery() {
