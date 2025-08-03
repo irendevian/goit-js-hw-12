@@ -1,10 +1,10 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import iziToast from "izitoast";
 
 
 const gallery = document.querySelector(".gallery");
 const loader = document.querySelector(".loader");
+const loaderBottom = document.querySelector(".loader-bottom");
 const loadMore = document.querySelector(".btn-load-more");
 
 
@@ -47,6 +47,14 @@ export function showLoader() {
 
 export function hideLoader() {
     loader.classList.add("hidden");
+}
+
+export function showLoaderBottom() {
+    loaderBottom.classList.remove("hidden");
+}
+
+export function hideLoaderBottom() {
+    loaderBottom.classList.add("hidden");
 }
 
 

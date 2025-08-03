@@ -3,6 +3,8 @@ import { createGallery } from './js/render-functions.js';
 import { clearGallery } from './js/render-functions.js';
 import { showLoader } from './js/render-functions.js';
 import { hideLoader } from './js/render-functions.js';
+import { showLoaderBottom } from './js/render-functions.js';
+import { hideLoaderBottom } from './js/render-functions.js';
 import { showLoadMoreButton } from './js/render-functions.js';
 import { hideLoadMoreButton } from './js/render-functions.js';
 import iziToast from "izitoast";
@@ -58,7 +60,7 @@ function handleSubmit(event) {
 
             createGallery(images);
 
-            if (currentPage * 15 >= totalHits) {
+            if (images * 15 >= totalHits) {
                 hideLoadMoreButton();
                 iziToast.info({
                     title: 'Info',
@@ -86,13 +88,15 @@ function handleSubmit(event) {
 
 function handleLoadMore() {
     currentPage++;
-    showLoader();
+    showLoaderBottom();
+
+    loadMore.disabled = true;
 
     getImagesByQuery(currentQuery, currentPage)
         .then(data => {
             createGallery(data.hits);
 
-            if (currentPage * 15 >= totalHits) {
+            if (data.hits * 15 >= totalHits) {
                 hideLoadMoreButton();
                 iziToast.info({
                     title: 'Info',
@@ -109,7 +113,8 @@ function handleLoadMore() {
             });
         })
         .finally(() => {
-            hideLoader();
+            hideLoaderBottom();
+            loadMore.disabled = false;
         });
 } 
 
